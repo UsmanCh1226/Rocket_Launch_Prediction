@@ -13,16 +13,11 @@ def train_models():
     # -----------------------
     # 1. Clean target variable
     # -----------------------
-    # Drop NaNs
     mask = y.notna()
     X = X.loc[mask]
-    y = y.loc[mask]
+    y = y.loc[mask].astype(int)
 
-    # Force binary int labels (0/1)
-    y = y.astype(int)
-
-    # Safety checks
-    assert set(y.unique()).issubset({0, 1}), f"Invalid labels found: {y.unique()}"
+    assert set(y.unique()).issubset({0, 1}), f"Invalid labels: {y.unique()}"
 
     print("Class distribution:")
     print(y.value_counts())
@@ -39,15 +34,23 @@ def train_models():
     )
 
     # -----------------------
-    # 3. Train models
+    # 3. Train imbalance-aware models
     # -----------------------
-    log_reg = LogisticRegression(max_iter=1000)
+    log_reg = LogisticRegression(
+        max_iter=1000,
+        class_weight="balanced",
+        random_state=42
+    )
     log_reg.fit(X_train, y_train)
 
-    tree = DecisionTreeClassifier(max_depth=5, random_state=42)
+    tree = DecisionTreeClassifier(
+        max_depth=5,
+        class_weight="balanced",
+        random_state=42
+    )
     tree.fit(X_train, y_train)
 
-    print("\nModels trained successfully!")
+    print("\nModels trained successfully with class weighting!")
     print("Training samples:", X_train.shape[0])
     print("Test samples:", X_test.shape[0])
 
