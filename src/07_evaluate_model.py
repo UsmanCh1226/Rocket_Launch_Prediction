@@ -1,4 +1,6 @@
 import pandas as pd
+from src.random_forest_model import train_random_forest
+
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
@@ -14,6 +16,9 @@ from src.train_model import train_models  # use the renamed file
 
 def evaluate_models():
     log_reg, tree, X_test, y_test = train_models()
+
+    rf, X_test_rf, y_test_rf = train_random_forest()
+    models["Random Forest"] = rf
 
     models = {
         "Logistic Regression": log_reg,
