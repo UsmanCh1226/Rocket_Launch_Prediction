@@ -1,6 +1,7 @@
 import pandas as pd
 from src.random_forest_model import train_random_forest
 
+
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
